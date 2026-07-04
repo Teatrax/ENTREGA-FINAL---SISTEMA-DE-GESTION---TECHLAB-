@@ -1,5 +1,8 @@
 package com.techlab.ecommerce.models;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,6 +14,20 @@ import jakarta.persistence.Table;
 @Entity // Le avisa a Spring que esto mapeara una tabla
 @Table(name = "productos") // Define el nombre de la tabla en PostgreSQL
 @Inheritance(strategy = InheritanceType.JOINED) // le dice a la Base de Datos que respete la herencia de Java.
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "tipoProducto")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Alimento.class, name = "ALIMENTO"),
+        @JsonSubTypes.Type(value = Bebida.class, name = "BEBIDA"),
+        @JsonSubTypes.Type(value = Electronico.class, name = "ELECTRONICO")
+
+// Le dice a Jackson (la libreria que lee/escribe JSON) que cuando reciba un
+// "Producto" en un JSON mire el campo "tipoProducto" para saber si tiene que
+// construir un Alimento, una Bebida o un Electronico. Sin esto Jackson no
+// puede instanciar una clase abstracta y tira error al deserializar
+
+})
+
 public abstract class Producto {
 
     @Id // Define la clave primaria

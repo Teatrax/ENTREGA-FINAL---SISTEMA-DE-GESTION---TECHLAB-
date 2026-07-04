@@ -8,6 +8,8 @@ import com.techlab.ecommerce.models.LineaPedido;
 import com.techlab.ecommerce.models.Producto;
 import com.techlab.ecommerce.repository.PedidoRepository;
 import com.techlab.ecommerce.repository.ProductoRepository;
+import jakarta.transaction.Transactional;
+
 import com.techlab.ecommerce.exception.StockInsuficienteException;
 import com.techlab.ecommerce.exception.PedidoVacioException;
 
@@ -26,6 +28,7 @@ public class PedidoService {
 
     // Registra el pedido entero, controla stock renglon por renglon y descuenta en
     // la BD
+    @Transactional
     public Pedido registrarPedido(Pedido pedido) throws StockInsuficienteException, PedidoVacioException {
 
         // Validación: Si el carrito no tiene productos, frena la ejecución
@@ -68,6 +71,7 @@ public class PedidoService {
     }
 
     // Un boton para poder borrar una venta de la BD si hiciera falta
+    @Transactional
     public void eliminarPedido(Integer id) {
         pedidoRepository.deleteById(id);
     }
